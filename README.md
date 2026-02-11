@@ -1,12 +1,12 @@
 ## 🚀 Live Demo
 
-🔗 **Live Demo:** [https://lithish-s.github.io/CodeAlpha_MusicPlayer/](https://lithish-s.github.io/CodeAlpha_Musicplayer/)
+🔗 **Live Demo:** [https://lithish-s.github.io/CodeAlpha_Musicplayer/](https://lithish-s.github.io/CodeAlpha_Musicplayer/)
 
 ## 📋 Task Requirements Met
 
 # 🎵 CodeAlpha Music Player
 
-![Music Player](https://img.shields.io/badge/CodeAlpha-Music%20player-blueviolet)
+![Music Player](https://img.shields.io/badge/CodeAlpha-Music%20Player-blueviolet)
 ![HTML5](https://img.shields.io/badge/HTML5-Orange)
 ![CSS3](https://img.shields.io/badge/CSS3-Blue)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
