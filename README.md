@@ -6,7 +6,7 @@
 
 # 🎵 CodeAlpha Music Player
 
-![Music Player](https://img.shields.io/badge/CodeAlpha-Music%20Player-blueviolet)
+![Music Player](https://img.shields.io/badge/CodeAlpha-Music%20player-blueviolet)
 ![HTML5](https://img.shields.io/badge/HTML5-Orange)
 ![CSS3](https://img.shields.io/badge/CSS3-Blue)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
