@@ -1,6 +1,6 @@
 ## 🚀 Live Demo
 
-🔗 **Live Demo:** [https://lithish-s.github.io/CodeAlpha_MusicPlayer/](https://lithish-s.github.io/CodeAlpha_MusicPlayer/)
+🔗 **Live Demo:** [https://lithish-s.github.io/CodeAlpha_MusicPlayer/](https://lithish-s.github.io/CodeAlpha_Musicplayer/)
 
 ## 📋 Task Requirements Met
 
