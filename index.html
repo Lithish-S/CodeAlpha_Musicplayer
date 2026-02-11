@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 CodeAlpha Music Player</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ========== CSS STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .player-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .music-player {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #764ba2;
+        }
+
+        .album-art {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 25px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .album-art i {
+            font-size: 80px;
+            color: white;
+        }
+
+        .song-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        #song-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        #song-artist {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .progress-container {
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .progress-handle {
+            width: 14px;
+            height: 14px;
+            background: white;
+            border: 2px solid #764ba2;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0%;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar:hover .progress-handle {
+            opacity: 1;
+        }
+
+        .time-container {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            color: #764ba2;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .control-btn:hover {
+            background: #764ba2;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .play-btn {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 24px;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.15);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #666;
+        }
+
+        .volume-bar {
+            flex: 1;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .volume-level {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        .volume-handle {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid #764ba2;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 100%;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
+        }
+
+        .volume-bar:hover .volume-handle {
+            opacity: 1;
+        }
+
+        #volume-percent {
+            min-width: 45px;
+            font-size: 14px;
+        }
+
+        .autoplay-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .autoplay-container label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .playlist {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .playlist h3 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .playlist-items {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .playlist-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .playlist-item.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .playlist-item.active span {
+            color: white;
+        }
+
+        .song-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .song-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .artist-name {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .song-duration {
+            color: #999;
+            font-size: 13px;
+        }
+
+        .playlist-item.active .artist-name,
+        .playlist-item.active .song-duration {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .now-playing-indicator {
+            color: #764ba2;
+            margin-left: 5px;
+        }
+
+        .playlist-item.active .now-playing-indicator {
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+            .player-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .album-art {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .player-container {
+                padding: 15px;
+            }
+            
+            .music-player, .playlist {
+                padding: 20px;
+            }
+            
+            .album-art {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .controls {
+                gap: 15px;
+            }
+            
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .play-btn {
+                width: 55px;
+                height: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <!-- Music Player Section -->
+        <div class="music-player">
+            <div class="header">
+                <h2>🎧 CodeAlpha Player</h2>
+                <div class="current-time"></div>
+            </div>
+
+            <div class="album-art">
+                <i class="fas fa-music"></i>
+            </div>
+
+            <div class="song-info">
+                <h3 id="song-title">Select a song</h3>
+                <p id="song-artist">Artist</p>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress" id="progress"></div>
+                    <div class="progress-handle" id="progress-handle"></div>
+                </div>
+                <div class="time-container">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="prev" class="control-btn"><i class="fas fa-backward"></i></button>
+                <button id="play" class="control-btn play-btn"><i class="fas fa-play"></i></button>
+                <button id="next" class="control-btn"><i class="fas fa-forward"></i></button>
+            </div>
+
+            <div class="volume-container">
+                <i class="fas fa-volume-up"></i>
+                <div class="volume-bar" id="volume-bar">
+                    <div class="volume-level" id="volume-level"></div>
+                    <div class="volume-handle" id="volume-handle"></div>
+                </div>
+                <span id="volume-percent">100%</span>
+            </div>
+
+            <div class="autoplay-container">
+                <label for="autoplay">
+                    <input type="checkbox" id="autoplay"> Autoplay Next
+                </label>
+            </div>
+        </div>
+
+        <!-- Playlist Section -->
+        <div class="playlist">
+            <h3><i class="fas fa-list"></i> Playlist</h3>
+            <ul class="playlist-items" id="playlist-items">
+                <!-- Playlist items will be added here by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // ========== JAVASCRIPT CODE ==========
+        
+        // Playlist Data
+        const playlist = [
+            {
+                id: 1,
+                title: "Blinding Lights",
+                artist: "The Weeknd",
+                duration: "3:20",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            },
+            {
+                id: 2,
+                title: "Shape of You",
+                artist: "Ed Sheeran",
+                duration: "3:54",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            },
+            {
+                id: 3,
+                title: "Dance Monkey",
+                artist: "Tones and I",
+                duration: "3:29",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+            },
+            {
+                id: 4,
+                title: "Someone Like You",
+                artist: "Adele",
+                duration: "4:45",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
+            },
+            {
+                id: 5,
+                title: "Uptown Funk",
+                artist: "Bruno Mars",
+                duration: "4:30",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"
+            },
+            {
+                id: 6,
+                title: "Perfect",
+                artist: "Ed Sheeran",
+                duration: "4:23",
+                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"
+            }
+        ];
+
+        // DOM Elements
+        const audio = new Audio();
+        const playBtn = document.getElementById('play');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const songTitle = document.getElementById('song-title');
+        const songArtist = document.getElementById('song-artist');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const progressHandle = document.getElementById('progress-handle');
+        const volumeBar = document.getElementById('volume-bar');
+        const volumeLevel = document.getElementById('volume-level');
+        const volumeHandle = document.getElementById('volume-handle');
+        const volumePercent = document.getElementById('volume-percent');
+        const playlistItems = document.getElementById('playlist-items');
+        const autoplayCheckbox = document.getElementById('autoplay');
+
+        // State
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isDraggingProgress = false;
+        let isDraggingVolume = false;
+
+        // Initialize Playlist
+        function initPlaylist() {
+            playlistItems.innerHTML = playlist.map((song, index) => `
+                <li class="playlist-item ${index === currentSongIndex ? 'active' : ''}" data-index="${index}">
+                    <div class="song-details">
+                        <span class="song-name">${song.title}</span>
+                        <span class="artist-name">${song.artist}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span class="song-duration">${song.duration}</span>
+                        ${index === currentSongIndex && isPlaying ? '<i class="fas fa-volume-up now-playing-indicator"></i>' : ''}
+                    </div>
+                </li>
+            `).join('');
+
+            // Add click listeners to playlist items
+            document.querySelectorAll('.playlist-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const index = parseInt(item.dataset.index);
+                    playSong(index);
+                });
+            });
+        }
+
+        // Load Song
+        function loadSong(index) {
+            const song = playlist[index];
+            audio.src = song.url;
+            songTitle.textContent = song.title;
+            songArtist.textContent = song.artist;
+            durationEl.textContent = song.duration;
+            currentSongIndex = index;
+            initPlaylist();
+        }
+
+        // Play Song
+        function playSong(index) {
+            if (index !== undefined) {
+                loadSong(index);
+            }
+            audio.play();
+            isPlaying = true;
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            initPlaylist();
+        }
+
+        // Pause Song
+        function pauseSong() {
+            audio.pause();
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            initPlaylist();
+        }
+
+        // Toggle Play/Pause
+        function togglePlay() {
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+
+        // Previous Song
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            playSong(currentSongIndex);
+        }
+
+        // Next Song
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            playSong(currentSongIndex);
+        }
+
+        // Format Time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update Progress
+        function updateProgress() {
+            if (!isDraggingProgress) {
+                const percent = (audio.currentTime / audio.duration) * 100 || 0;
+                progress.style.width = `${percent}%`;
+                progressHandle.style.left = `${percent}%`;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            }
+        }
+
+        // Set Progress
+        function setProgress(e) {
+            const width = progressBar.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // Update Volume
+        function updateVolume(e) {
+            const width = volumeBar.clientWidth;
+            const clickX = e.offsetX;
+            const volume = Math.max(0, Math.min(1, clickX / width));
+            audio.volume = volume;
+            volumeLevel.style.width = `${volume * 100}%`;
+            volumeHandle.style.left = `${volume * 100}%`;
+            volumePercent.textContent = `${Math.round(volume * 100)}%`;
+            
+            // Update volume icon
+            const volumeIcon = document.querySelector('.volume-container i');
+            if (volume === 0) {
+                volumeIcon.className = 'fas fa-volume-mute';
+            } else if (volume < 0.5) {
+                volumeIcon.className = 'fas fa-volume-down';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up';
+            }
+        }
+
+        // Handle Song End
+        function handleSongEnd() {
+            if (autoplayCheckbox.checked) {
+                nextSong();
+            } else {
+                isPlaying = false;
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                initPlaylist();
+            }
+        }
+
+        // Event Listeners
+        playBtn.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', prevSong);
+        nextBtn.addEventListener('click', nextSong);
+
+        // Progress Bar Events
+        progressBar.addEventListener('click', setProgress);
+        
+        progressBar.addEventListener('mousedown', (e) => {
+            isDraggingProgress = true;
+            setProgress(e);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDraggingProgress) {
+                const rect = progressBar.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                const percent = Math.max(0, Math.min(100, (x / width) * 100));
+                progress.style.width = `${percent}%`;
+                progressHandle.style.left = `${percent}%`;
+                audio.currentTime = (percent / 100) * audio.duration;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingProgress = false;
+        });
+
+        // Volume Bar Events
+        volumeBar.addEventListener('click', updateVolume);
+        
+        volumeBar.addEventListener('mousedown', (e) => {
+            isDraggingVolume = true;
+            updateVolume(e);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDraggingVolume) {
+                const rect = volumeBar.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const width = rect.width;
+                const volume = Math.max(0, Math.min(1, x / width));
+                audio.volume = volume;
+                volumeLevel.style.width = `${volume * 100}%`;
+                volumeHandle.style.left = `${volume * 100}%`;
+                volumePercent.textContent = `${Math.round(volume * 100)}%`;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingVolume = false;
+        });
+
+        // Audio Event Listeners
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', handleSongEnd);
+        audio.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audio.duration);
+        });
+
+        // Keyboard Support
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                prevSong();
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                nextSong();
+            } else if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                audio.volume = Math.min(1, audio.volume + 0.1);
+                volumeLevel.style.width = `${audio.volume * 100}%`;
+                volumeHandle.style.left = `${audio.volume * 100}%`;
+                volumePercent.textContent = `${Math.round(audio.volume * 100)}%`;
+            } else if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                audio.volume = Math.max(0, audio.volume - 0.1);
+                volumeLevel.style.width = `${audio.volume * 100}%`;
+                volumeHandle.style.left = `${audio.volume * 100}%`;
+                volumePercent.textContent = `${Math.round(audio.volume * 100)}%`;
+            }
+        });
+
+        // Initialize
+        loadSong(0);
+        audio.volume = 1;
+    </script>
+</body>
+</html>
